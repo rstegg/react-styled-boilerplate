@@ -1,37 +1,11 @@
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const path = require('path')
-const Dotenv = require('dotenv-webpack')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const LessPluginAutoPrefix = require('less-plugin-autoprefix')
-const CompressionPlugin = require('compression-webpack-plugin')
-
-const fileLoaderExcluded = [/\.html$/, /\.jsx?$/, /\.less$/, /\.css$/, /\.json$/, /\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/]
-const urlLoaderTest = [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/]
-
-const lessPlugins = () => [ new LessPluginAutoPrefix({ browsers: [ '>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9' ] }) ]
-const lessBuildLoader = ExtractTextPlugin.extract({
-  use: [
-    'css-loader',
-    { loader: 'less-loader', options: { plugins: lessPlugins() } }
-  ]
-})
-
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const paths = {
   src: path.join(__dirname, 'src'),
   dev: path.join(__dirname, 'dev'),
   build: path.join(__dirname, 'build'),
-}
-
-const alias = {
-   'actions': path.join(paths.src, 'js/redux/actions'),
-   'components': path.join(paths.src, 'js/components'),
-   'elements': path.join(paths.src, 'js/elements'),
-   'layouts': path.join(paths.src, 'js/layouts'),
-   'pages': path.join(paths.src, 'js/pages'),
-   'utils': path.join(paths.src, 'js/utils')
 }
 
 const common = {
@@ -42,8 +16,7 @@ const common = {
     publicPath: '/'
   },
   resolve: {
-    extensions: [ '.js', '.less' ],
-    alias,
+    extensions: [ '.js' ]
   },
   module: {
     rules: [
@@ -80,16 +53,11 @@ if (process.env.npm_lifecycle_event === 'bundle:dev') {
       new webpack.HotModuleReplacementPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-      }),
-      new Dotenv(),
-      new BundleAnalyzerPlugin()
+      })
     ],
     module: {
       rules: [
         { test: /\.jsx?$/, include: paths.src, enforce: 'pre', use: [{ loader: 'eslint-loader', options: { emitWarning: true } }] },
-        { loader: 'file-loader', exclude: fileLoaderExcluded, options: { name: 'static/media/[name].[hash:8].[ext]' } },
-        { test: urlLoaderTest, loader: 'url-loader', options: { limit: 10000, name: 'static/media/[name].[hash:8].[ext]' } },
-        { test: /\.less$/, include: paths.src, use: [ 'style-loader', 'css-loader', { loader: 'less-loader', options: { plugins: lessPlugins() } } ] },
       ]
     }
   })
@@ -98,7 +66,6 @@ if (process.env.npm_lifecycle_event === 'bundle:dev') {
 if (process.env.npm_lifecycle_event === 'bundle:build') {
   module.exports = merge(common, {
     plugins: [
-      new ExtractTextPlugin({ filename: 'main.css', allChunks: true }),
       new webpack.optimize.UglifyJsPlugin({
         mangle: true,
         compress: {
@@ -113,28 +80,15 @@ if (process.env.npm_lifecycle_event === 'bundle:build') {
         },
         exclude: [/\.min\.js$/gi]
       }),
-      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
       new webpack.LoaderOptionsPlugin({ minimize: true }),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
-      }),
-      new Dotenv(),
-      new CompressionPlugin({
-        asset: '[path].gz[query]',
-        algorithm: 'gzip',
-        test: /\.js$|\.css$|\.html$/,
-        threshold: 10240,
-        minRatio: 0
-      }),
-      new BundleAnalyzerPlugin()
+      })
     ],
     output: { path: paths.build },
     module: {
       rules: [
-        { test: /\.jsx?$/, include: paths.src, enforce: 'pre', use: [{ loader: 'eslint-loader', options: { emitWarning: true } }] },
-        { loader: 'file-loader', exclude: fileLoaderExcluded, options: { name: 'static/media/[name].[hash:8].[ext]' } },
-        { test: urlLoaderTest, loader: 'url-loader', options: { limit: 10000, name: 'static/media/[name].[hash:8].[ext]', } },
-        {  test: /.less$/, include: paths.src, loader: lessBuildLoader },
+        { test: /\.jsx?$/, include: paths.src, enforce: 'pre', use: [{ loader: 'eslint-loader', options: { emitWarning: true } }] }
       ]
     }
   })

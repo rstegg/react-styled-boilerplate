@@ -1,5 +1,5 @@
 /*Helpers*/
-import { isDevelopment, isProduction, reduxDevCompose, hasReactDevTools, disableReactDevTools } from 'utils/helpers'
+import { isDevelopment, isProduction, reduxDevCompose, hasReactDevTools, disableReactDevTools } from './utils/helpers'
 
 /*Router history middleare*/
 import createHistory from 'history/createBrowserHistory'
