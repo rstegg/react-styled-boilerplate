@@ -42,12 +42,6 @@ if (process.env.npm_lifecycle_event === 'bundle:dev') {
       hot: true,
       disableHostCheck: true,
       host: '0.0.0.0',
-      proxy: {
-        '/api/v1': {
-          target: 'http://localhost:3030',
-          secure: false
-        }
-      }
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),

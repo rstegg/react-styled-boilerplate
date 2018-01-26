@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import PropTypes, { Props } from 'prop-types'
 import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { length } from 'ramda'
 
 import Section from '../../elements/Section'
 import Button from '../../elements/Button'
@@ -13,7 +14,7 @@ import { resetQuiz } from '../../redux/actions/quiz'
 
 class Home extends Component<Props> {
   componentDidMount() {
-    if (this.props.quiz.answered) {
+    if (length(this.props.answered)) {
       this.props.resetQuiz()
     }
   }
@@ -44,13 +45,14 @@ class Home extends Component<Props> {
 }
 
 Home.propTypes = {
-  quiz: PropTypes.object.isRequired,
+  answered: PropTypes.array.isRequired,
   resetQuiz: PropTypes.func.isRequired,
 }
 
+/**/
 const mapStateToProps = ({ quiz }) =>
 ({
-  quiz
+  answered: quiz.answered
 })
 
 const mapDispatchToProps = dispatch =>

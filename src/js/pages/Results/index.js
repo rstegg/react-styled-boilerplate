@@ -16,7 +16,7 @@ import QuestionResult from './QuestionResult'
 
 import { hasCorrectAnswer, renderScoreIcon } from '../../utils/helpers'
 
-const ResultsScreen = ({ quiz: { answered } }) =>
+const ResultsScreen = ({ answered }) =>
   <Section>
     <Section.Container>
       <Section.Title>{`You scored ${reduce(hasCorrectAnswer, 0, answered)}/${answered.length}`}</Section.Title>
@@ -48,14 +48,14 @@ const ResultsScreen = ({ quiz: { answered } }) =>
   </Section>
 
 ResultsScreen.propTypes = {
-  quiz: PropTypes.object.isRequired,
+  answered: PropTypes.array.isRequired,
 }
 
 const mapStateToProps = ({ quiz }) =>
 ({
-  quiz
+  answered: quiz.answered
 })
 
 export default connect(
-  mapStateToProps, {}
+  mapStateToProps
 )(ResultsScreen)

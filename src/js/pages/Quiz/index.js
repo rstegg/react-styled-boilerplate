@@ -32,7 +32,7 @@ class QuizScreen extends Component<Props> {
     answerQuestion(question, answer)
   }
   render() {
-    const { quiz: { isLoading, questions, answered, active } } = this.props
+    const { isLoading, questions, answered, active } = this.props
     if (!active) {
       return <Redirect to='/results' />
     }
@@ -70,14 +70,20 @@ class QuizScreen extends Component<Props> {
 }
 
 QuizScreen.propTypes = {
-  quiz: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  questions: PropTypes.array.isRequired,
+  answered: PropTypes.array.isRequired,
+  active: PropTypes.object,
   fetchQuiz: PropTypes.func.isRequired,
   answerQuestion: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = ({ quiz }) =>
 ({
-  quiz
+  isLoading: quiz.isLoading,
+  questions: quiz.questions,
+  answered: quiz.answered,
+  active: quiz.active
 })
 
 const mapDispatchToProps = dispatch =>
