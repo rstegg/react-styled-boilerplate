@@ -1,6 +1,3 @@
-/*Helpers*/
-import { isDevelopment, isProduction, reduxDevCompose, hasReactDevTools, disableReactDevTools } from './utils/helpers'
-
 /*Router history middleare*/
 import createHistory from 'history/createBrowserHistory'
 export const history = createHistory()
@@ -17,18 +14,13 @@ const epicMiddleware = createEpicMiddleware(rootEpic)
 import { applyMiddleware, createStore, compose } from 'redux'
 
 const composeEnhancers =
-  isDevelopment ? reduxDevCompose || compose
+  process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
   : compose
-
-if (isProduction && hasReactDevTools) {
-  disableReactDevTools()
-}
 
 import rootReducer from './redux/reducers'
 
 const store = createStore(
   rootReducer,
-  undefined,
   composeEnhancers(
     applyMiddleware(
       epicMiddleware,
@@ -37,12 +29,10 @@ const store = createStore(
   )
 )
 
-if (isDevelopment) {
-  if (module.hot) {
-    module.hot.accept('./redux/reducers/index', () =>
-      store.replaceReducer(require('./redux/reducers/index'))
-    )
-  }
+if (module.hot) {
+  module.hot.accept('./redux/reducers/index', () =>
+    store.replaceReducer(require('./redux/reducers/index'))
+  )
 }
 
 export default store

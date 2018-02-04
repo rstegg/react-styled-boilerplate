@@ -10,7 +10,7 @@ export const fetchQuiz = () =>
   type: 'FETCH_QUIZ'
 })
 
-export const onFetchQuizSuccess = (questions: Object[], active: Object) =>
+export const onFetchQuizSuccess = (questions: Array<Object>, active: Object) =>
 ({
   type: 'FETCH_QUIZ_SUCCESS',
   payload: {

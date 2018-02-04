@@ -11,7 +11,7 @@ const initialState = {
 export const answerQuestion = ({ question, answer }: { question: Object, answer: string })  =>
   ({ ...question, answer })
 
-export const getNextQuestion = ({ question }: { question: Object }, questionsState: Object[]) =>
+export const getNextQuestion = ({ question }: { question: Object }, questionsState: Array<Object>) =>
   questionsState[questionsState.indexOf(question) + 1] ?
   questionsState[questionsState.indexOf(question) + 1] : null
 
